@@ -1,0 +1,44 @@
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+import argparse
+import time
+
+def nothing(x):
+    pass
+# start code
+img_origin = cv2.imread('cabnb.png')
+img1 = cv2.resize(img_origin,(480,400))
+cv2.imshow('origin',img1)
+#
+cv2.namedWindow('img')
+cv2.createTrackbar('L_B','img',0,255,nothing)
+cv2.createTrackbar('L_G','img',0,255,nothing)
+cv2.createTrackbar('L_R','img',0,255,nothing)
+
+cv2.createTrackbar('U_B','img',255,255,nothing)
+cv2.createTrackbar('U_G','img',255,255,nothing)
+cv2.createTrackbar('U_R','img',255,255,nothing)
+while True:
+    l_b = cv2.getTrackbarPos('L_B','img')
+    print(l_b)
+    l_g = cv2.getTrackbarPos('L_G','img')
+    l_r = cv2.getTrackbarPos('L_R','img')
+
+    u_b = cv2.getTrackbarPos('U_B','img')
+    print(u_b)
+    u_g = cv2.getTrackbarPos('U_G','img')
+    u_r = cv2.getTrackbarPos('U_R','img')
+    ##range color
+    lower_spot = np.array([l_b,l_g,l_r]) #17,0,0
+    upper_spot = np.array([u_b,u_g,u_r])#255,255,255
+    kernel = np.ones((3,3), np.uint8)
+    mask = cv2.inRange(img1, lower_spot, upper_spot)
+    result = cv2.bitwise_and(img1, img1, mask=mask)
+    cv2.imshow('Inrange',result)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+
+#cv2.destroyAllWindows()
+
